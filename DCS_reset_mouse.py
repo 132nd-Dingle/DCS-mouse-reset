@@ -6,14 +6,33 @@ import pygame
 import sys
 import configparser
 import logging
+import os  # Import os module to handle file operations
 
-# Initialize logging
+# Define log file path
 LOG_FILE = "center_mouse.log"
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
+
+
+# Function to initialize logging
+def initialize_logging():
+    # Remove all handlers associated with the root logger object to reset logging config
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    # Ensure the log file is removed if it exists to start fresh each run
+    if os.path.exists(LOG_FILE):
+        os.remove(LOG_FILE)
+
+    # Initialize logging
+    logging.basicConfig(
+        filename=LOG_FILE,
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filemode="w",  # Overwrite the log file each run
+    )
+
+
+# Initialize logging (must be done before importing other modules that configure logging)
+initialize_logging()
 
 
 # Redirect stdout and stderr to the log file
